@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Chatbot</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .chat-container {
+            width: 90%;
+            max-width: 700px;
+            height: 80vh;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #1677ff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+
+        .bot {
+            background: #eaf4ff;
+        }
+
+        .user {
+            background: #1677ff;
+            color: white;
+            margin-left: auto;
+        }
+
+        .input-area {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background: #1677ff;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="chat-container">
+
+    <div class="header">
+        <h1>🌊 Ocean Chatbot</h1>
+        <p>Ask me about the ocean!</p>
+    </div>
+
+    <div class="messages" id="messages">
+        <div class="message bot">
+            Hi! Ask me something about the ocean 🌊
+        </div>
+    </div>
+
+    <div class="input-area">
+        <input
+            type="text"
+            id="messageInput"
+            placeholder="Ask something..."
+        >
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+</div>
+
+<script>
+    async function sendMessage() {
+
+        const input = document.getElementById("messageInput");
+        const messages = document.getElementById("messages");
+
+        const message = input.value.trim();
+
+        if (!message) {
+            return;
+        }
+
+        messages.innerHTML += `
+            <div class="message user">
+                ${message}
+            </div>
+        `;
+
+        input.value = "";
+
+        const response = await fetch(
+            "https://ocean-chatbot-sand.vercel.app/chat",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: message
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        messages.innerHTML += `
+            <div class="message bot">
+                ${data.answer}
+            </div>
+        `;
+
+        messages.scrollTop = messages.scrollHeight;
+    }
+</script>
+
+</body>
+</html>

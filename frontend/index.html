@@ -97,8 +97,8 @@
 <div class="chat-container">
 
     <div class="header">
-       <h1>📚 BooksTaken</h1>
-<p>Your reading journey, one conversation at a time.</p>
+        <h1>📚 BooksTaken</h1>
+        <p>Your reading journey, one conversation at a time.</p>
     </div>
 
     <div class="messages" id="messages">
@@ -139,7 +139,7 @@
         input.value = "";
 
         const response = await fetch(
-    "http://localhost:8000/chat",
+            "/chat",
             {
                 method: "POST",
                 headers: {

@@ -3,164 +3,1126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whatsapp Chatbot</title>
+
+    <title>BooksTaken Assistant</title>
 
     <style>
         * {
             box-sizing: border-box;
         }
 
+        :root {
+            --green-dark: #34483d;
+            --green: #718f7a;
+            --green-light: #dce8dd;
+            --sage: #edf3eb;
+            --beige: #f5efe3;
+            --beige-light: #faf7ef;
+            --text: #344039;
+            --muted: #718078;
+            --border: rgba(52, 72, 61, 0.18);
+        }
+
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f0f8ff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--beige);
+            color: var(--text);
             min-height: 100vh;
         }
 
-        .chat-container {
-            width: 90%;
-            max-width: 700px;
-            height: 80vh;
-            background: white;
-            border-radius: 20px;
+        /* =========================
+           MAIN APP
+        ========================= */
+
+        .app {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+        }
+
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            width: 250px;
+            background: var(--green-dark);
+            padding: 32px 24px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            color: var(--beige);
         }
 
-        .header {
-            background: #1677ff;
-            color: white;
-            padding: 20px;
-            text-align: center;
+        .logo {
+            width: 52px;
+            height: 52px;
+            background: var(--beige);
+            color: var(--green-dark);
+            border-radius: 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 25px;
+            font-weight: bold;
+
+            margin-bottom: 35px;
+
+            box-shadow: 5px 5px 0 rgba(245, 239, 227, 0.15);
         }
 
-        .header h1 {
-            margin: 0;
+        .brand-small {
+            color: #c5ddc9;
+            font-size: 12px;
+            letter-spacing: 1px;
+            font-weight: bold;
+            margin-bottom: 8px;
         }
+
+        .brand {
+            font-size: 25px;
+            font-weight: 700;
+            line-height: 1.05;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 22px;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+
+            background: #a9c9ad;
+            border-radius: 50%;
+
+            box-shadow: 0 0 10px rgba(169, 201, 173, 0.6);
+        }
+
+        .sidebar-text {
+            color: #b9c8bd;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-top: 8px;
+        }
+
+
+        /* =========================
+           CHAT AREA
+        ========================= */
+
+        .chat-area {
+            flex: 1;
+
+            display: flex;
+            flex-direction: column;
+
+            min-width: 0;
+            min-height: 100vh;
+
+            background: var(--beige);
+        }
+
+
+        /* =========================
+           TOP BAR
+        ========================= */
+
+        .topbar {
+            height: 75px;
+
+            padding: 0 6%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .session {
+            font-size: 12px;
+            color: var(--green);
+
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .ready {
+            border: 1px solid var(--border);
+
+            padding: 8px 14px;
+            border-radius: 20px;
+
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           MESSAGE AREA
+        ========================= */
 
         .messages {
             flex: 1;
-            padding: 20px;
+
             overflow-y: auto;
+
+            padding: 50px 8%;
+
+            scroll-behavior: smooth;
         }
 
-        .message {
-            margin-bottom: 15px;
-            padding: 12px 16px;
+
+        /* =========================
+           WELCOME
+        ========================= */
+
+        .welcome {
+            max-width: 750px;
+            margin: 0 auto 35px;
+        }
+
+        .welcome-label {
+            color: var(--green);
+
+            font-family: monospace;
+            font-size: 14px;
+
+            margin-bottom: 16px;
+        }
+
+        .welcome h1 {
+            color: var(--green-dark);
+
+            font-size: clamp(32px, 4vw, 52px);
+
+            line-height: 1.05;
+
+            margin: 0 0 18px;
+
+            letter-spacing: -2px;
+        }
+
+        .welcome p {
+            color: var(--muted);
+
+            font-size: 16px;
+
+            line-height: 1.6;
+
+            margin: 0;
+        }
+
+
+        /* =========================
+           SUGGESTION BUTTONS
+        ========================= */
+
+        .suggestions {
+            max-width: 750px;
+
+            margin: 0 auto;
+
+            display: grid;
+
+            grid-template-columns: repeat(2, 1fr);
+
+            gap: 12px;
+        }
+
+        .suggestion {
+            background: rgba(255, 255, 255, 0.35);
+
+            border: 1px solid var(--border);
+
             border-radius: 15px;
-            max-width: 80%;
+
+            padding: 18px;
+
+            color: var(--text);
+
+            text-align: left;
+
+            cursor: pointer;
+
+            transition: all 0.2s ease;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            min-height: 70px;
         }
 
-        .bot {
-            background: #eaf4ff;
+        .suggestion:hover {
+            border-color: var(--green);
+
+            background: var(--green-light);
+
+            transform: translateY(-2px);
         }
 
-        .user {
-            background: #1677ff;
+        .suggestion-left {
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+        }
+
+        .suggestion-icon {
+            font-size: 20px;
+        }
+
+        .suggestion-title {
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+        .suggestion-arrow {
+            color: var(--green);
+
+            font-size: 20px;
+        }
+
+
+        /* =========================
+           CHAT MESSAGES
+        ========================= */
+
+        .chat-message {
+            max-width: 750px;
+
+            margin: 0 auto 18px;
+
+            display: flex;
+        }
+
+        .chat-message.user {
+            justify-content: flex-end;
+        }
+
+        .bubble {
+            max-width: 75%;
+
+            padding: 14px 17px;
+
+            border-radius: 17px;
+
+            line-height: 1.5;
+
+            font-size: 15px;
+
+            white-space: pre-wrap;
+        }
+
+        .bot .bubble {
+            background: var(--sage);
+
+            border: 1px solid var(--border);
+
+            color: var(--text);
+
+            border-bottom-left-radius: 5px;
+        }
+
+        .user .bubble {
+            background: var(--green);
+
             color: white;
-            margin-left: auto;
+
+            border-bottom-right-radius: 5px;
+        }
+
+
+        /* =========================
+           TYPING INDICATOR
+        ========================= */
+
+        .typing {
+            display: flex;
+
+            gap: 5px;
+
+            align-items: center;
+        }
+
+        .typing span {
+            width: 6px;
+            height: 6px;
+
+            background: var(--muted);
+
+            border-radius: 50%;
+
+            animation: bounce 1.2s infinite;
+        }
+
+        .typing span:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .typing span:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-5px);
+            }
+        }
+
+
+        /* =========================
+           INPUT AREA
+        ========================= */
+
+        .input-section {
+            padding: 15px 8% 28px;
+        }
+
+        .input-wrapper {
+            max-width: 750px;
+
+            margin: auto;
+
+            position: relative;
         }
 
         .input-area {
+            width: 100%;
+
+            min-height: 64px;
+
+            border: 1px solid rgba(52, 72, 61, 0.25);
+
+            background: var(--beige-light);
+
+            border-radius: 34px;
+
             display: flex;
-            padding: 15px;
-            border-top: 1px solid #ddd;
-            gap: 10px;
+
+            align-items: center;
+
+            padding: 8px 10px 8px 22px;
+
+            transition: border 0.2s;
+        }
+
+        .input-area:focus-within {
+            border-color: var(--green);
         }
 
         input {
             flex: 1;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            font-size: 16px;
+
+            border: none;
+
+            outline: none;
+
+            background: transparent;
+
+            color: var(--text);
+
+            font-size: 15px;
+
+            min-width: 0;
         }
 
-        button {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
-            background: #1677ff;
-            color: white;
-            cursor: pointer;
+        input::placeholder {
+            color: #89968d;
         }
+
+        .send-button {
+            width: 48px;
+            height: 48px;
+
+            border-radius: 50%;
+
+            border: none;
+
+            background: var(--green);
+
+            color: white;
+
+            font-size: 22px;
+
+            cursor: pointer;
+
+            transition: all 0.2s;
+        }
+
+        .send-button:hover {
+            background: #5f7d68;
+
+            transform: scale(1.05);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+        .footer-text {
+            max-width: 750px;
+
+            margin: 10px auto 0;
+
+            text-align: center;
+
+            font-size: 11px;
+
+            color: #89968d;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .topbar {
+                padding: 0 20px;
+            }
+
+            .messages {
+                padding: 35px 20px;
+            }
+
+            .welcome h1 {
+                font-size: 34px;
+            }
+
+            .suggestions {
+                grid-template-columns: 1fr;
+            }
+
+            .input-section {
+                padding: 12px 15px 20px;
+            }
+
+            .bubble {
+                max-width: 88%;
+            }
+        }
+
     </style>
 </head>
 
+
 <body>
 
-<div class="chat-container">
+<div class="app">
 
-    <div class="header">
-        <h1>📚 BooksTaken</h1>
-        <p>Your reading journey, one conversation at a time.</p>
-    </div>
 
-    <div class="messages" id="messages">
-        <div class="message bot">
-            Hi! I'm the BooksTaken assistant. How can I help you? 😊
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            B
         </div>
-    </div>
 
-    <div class="input-area">
-        <input
-            type="text"
-            id="messageInput"
-            placeholder="Ask something..."
-        >
-        <button onclick="sendMessage()">Send</button>
-    </div>
+        <div class="brand-small">
+            BOOKSTAKEN
+        </div>
+
+        <div class="brand">
+            BooksTaken<br>
+            Assistant
+        </div>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="status">
+
+                <span class="status-dot"></span>
+
+                Here for parents
+
+            </div>
+
+
+            <div class="sidebar-text">
+
+                Helpful answers about your
+                child's reading journey.
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================
+         CHAT AREA
+    ========================== -->
+
+    <main class="chat-area">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div class="session">
+                NEW SESSION
+            </div>
+
+
+            <div class="ready">
+
+                <span class="status-dot"></span>
+
+                Ready
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================
+             MESSAGES
+        ========================== -->
+
+        <div class="messages" id="messages">
+
+
+            <!-- WELCOME SCREEN -->
+
+            <div id="welcomeSection">
+
+
+                <div class="welcome">
+
+                    <div class="welcome-label">
+                        Welcome to BooksTaken support.
+                    </div>
+
+
+                    <h1>
+                        How can we help with your child's reading journey?
+                    </h1>
+
+
+                    <p>
+                        Ask us anything about BooksTaken,
+                        our mentors, reading sessions,
+                        pricing, or getting started.
+                    </p>
+
+                </div>
+
+
+
+                <!-- =========================
+                     QUICK QUESTIONS
+                ========================== -->
+
+                <div class="suggestions">
+
+
+                    <button
+                        class="suggestion"
+                        onclick="askQuestion('How much does BooksTaken cost?')"
+                    >
+
+                        <div class="suggestion-left">
+
+                            <span class="suggestion-icon">
+                                💰
+                            </span>
+
+                            <span class="suggestion-title">
+                                How much does it cost?
+                            </span>
+
+                        </div>
+
+
+                        <span class="suggestion-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+
+                    <button
+                        class="suggestion"
+                        onclick="askQuestion('How are the mentors selected?')"
+                    >
+
+                        <div class="suggestion-left">
+
+                            <span class="suggestion-icon">
+                                👩‍🏫
+                            </span>
+
+                            <span class="suggestion-title">
+                                How are mentors selected?
+                            </span>
+
+                        </div>
+
+
+                        <span class="suggestion-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+
+                    <button
+                        class="suggestion"
+                        onclick="askQuestion('What if my child does not like reading?')"
+                    >
+
+                        <div class="suggestion-left">
+
+                            <span class="suggestion-icon">
+                                📚
+                            </span>
+
+                            <span class="suggestion-title">
+                                What if my child doesn't like reading?
+                            </span>
+
+                        </div>
+
+
+                        <span class="suggestion-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+
+                    <button
+                        class="suggestion"
+                        onclick="askQuestion('Can I book a free trial?')"
+                    >
+
+                        <div class="suggestion-left">
+
+                            <span class="suggestion-icon">
+                                🎁
+                            </span>
+
+                            <span class="suggestion-title">
+                                Can I book a free trial?
+                            </span>
+
+                        </div>
+
+
+                        <span class="suggestion-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================
+             INPUT
+        ========================== -->
+
+        <div class="input-section">
+
+
+            <div class="input-wrapper">
+
+
+                <div class="input-area">
+
+
+                    <input
+                        type="text"
+                        id="messageInput"
+                        placeholder="Ask a question about BooksTaken..."
+                        autocomplete="off"
+                    >
+
+
+                    <button
+                        class="send-button"
+                        id="sendButton"
+                        onclick="sendMessage()"
+                    >
+                        →
+                    </button>
+
+
+                </div>
+
+
+                <div class="footer-text">
+
+                    For account-specific help,
+                    contact the BooksTaken team directly.
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </main>
 
 </div>
 
+
+
 <script>
-    async function sendMessage() {
 
-        const input = document.getElementById("messageInput");
-        const messages = document.getElementById("messages");
 
-        const message = input.value.trim();
+    /* =========================
+       GET ELEMENTS
+    ========================== */
 
-        if (!message) {
-            return;
+    const input =
+        document.getElementById("messageInput");
+
+    const messages =
+        document.getElementById("messages");
+
+    const sendButton =
+        document.getElementById("sendButton");
+
+    const welcomeSection =
+        document.getElementById("welcomeSection");
+
+
+
+    /* =========================
+       ENTER KEY
+    ========================== */
+
+    input.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Enter") {
+
+                event.preventDefault();
+
+                sendMessage();
+
+            }
+
+        }
+    );
+
+
+
+    /* =========================
+       QUICK QUESTION
+    ========================== */
+
+    function askQuestion(question) {
+
+        input.value = question;
+
+        sendMessage();
+
+    }
+
+
+
+    /* =========================
+       ADD MESSAGE
+    ========================== */
+
+    function addMessage(text, type) {
+
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            `chat-message ${type}`;
+
+
+        const bubble =
+            document.createElement("div");
+
+        bubble.className =
+            "bubble";
+
+
+        /*
+         * textContent is used instead of
+         * innerHTML for user/AI messages.
+         */
+
+        bubble.textContent = text;
+
+
+        wrapper.appendChild(bubble);
+
+        messages.appendChild(wrapper);
+
+
+        messages.scrollTop =
+            messages.scrollHeight;
+
+    }
+
+
+
+    /* =========================
+       TYPING INDICATOR
+    ========================== */
+
+    function showTyping() {
+
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            "chat-message bot";
+
+        wrapper.id =
+            "typingMessage";
+
+
+        wrapper.innerHTML = `
+
+            <div class="bubble typing">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        `;
+
+
+        messages.appendChild(wrapper);
+
+        messages.scrollTop =
+            messages.scrollHeight;
+
+    }
+
+
+
+    /* =========================
+       REMOVE TYPING
+    ========================== */
+
+    function removeTyping() {
+
+        const typing =
+            document.getElementById(
+                "typingMessage"
+            );
+
+
+        if (typing) {
+
+            typing.remove();
+
         }
 
-        messages.innerHTML += `
-            <div class="message user">
-                ${message}
-            </div>
-        `;
+    }
+
+
+
+    /* =========================
+       SEND MESSAGE
+    ========================== */
+
+    async function sendMessage() {
+
+        const message =
+            input.value.trim();
+
+
+        if (
+            !message ||
+            sendButton.disabled
+        ) {
+
+            return;
+
+        }
+
+
+        /*
+         * Remove the welcome screen
+         * once conversation begins.
+         */
+
+        if (welcomeSection) {
+
+            welcomeSection.remove();
+
+        }
+
+
+        /* Show user message */
+
+        addMessage(
+            message,
+            "user"
+        );
+
+
+        /* Clear input */
 
         input.value = "";
 
-        const response = await fetch(
-            "/chat",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    message: message
-                })
+
+        /* Disable send */
+
+        sendButton.disabled = true;
+
+
+        /* Show typing */
+
+        showTyping();
+
+
+
+        try {
+
+
+            /*
+             * YOUR EXISTING BACKEND
+             *
+             * Nothing needs to change here.
+             */
+
+            const response =
+                await fetch(
+                    "/chat",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            message: message
+                        })
+                    }
+                );
+
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Server error"
+                );
+
             }
-        );
 
-        const data = await response.json();
 
-        messages.innerHTML += `
-            <div class="message bot">
-                ${data.answer}
-            </div>
-        `;
 
-        messages.scrollTop = messages.scrollHeight;
+            const data =
+                await response.json();
+
+
+            /* Remove typing */
+
+            removeTyping();
+
+
+            /* Show bot answer */
+
+            addMessage(
+                data.answer ||
+                "Sorry, I couldn't find an answer.",
+                "bot"
+            );
+
+
+        } catch (error) {
+
+
+            removeTyping();
+
+
+            addMessage(
+                "Sorry, something went wrong. Please try again.",
+                "bot"
+            );
+
+
+            console.error(error);
+
+        }
+
+
+
+        /* Enable send */
+
+        sendButton.disabled = false;
+
+
+        input.focus();
+
     }
+
 </script>
 
 </body>

@@ -3,1124 +3,347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>BooksTaken Assistant</title>
+    <title>BooksTaken Chatbot</title>
 
     <style>
         * {
             box-sizing: border-box;
         }
 
-        :root {
-            --green-dark: #34483d;
-            --green: #718f7a;
-            --green-light: #dce8dd;
-            --sage: #edf3eb;
-            --beige: #f5efe3;
-            --beige-light: #faf7ef;
-            --text: #344039;
-            --muted: #718078;
-            --border: rgba(52, 72, 61, 0.18);
-        }
-
         body {
             margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: var(--beige);
-            color: var(--text);
-            min-height: 100vh;
-        }
-
-        /* =========================
-           MAIN APP
-        ========================= */
-
-        .app {
-            width: 100%;
-            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #eef3e8;
             display: flex;
-        }
-
-
-        /* =========================
-           SIDEBAR
-        ========================= */
-
-        .sidebar {
-            width: 250px;
-            background: var(--green-dark);
-            padding: 32px 24px;
-            display: flex;
-            flex-direction: column;
-            color: var(--beige);
-        }
-
-        .logo {
-            width: 52px;
-            height: 52px;
-            background: var(--beige);
-            color: var(--green-dark);
-            border-radius: 16px;
-
-            display: flex;
-            align-items: center;
             justify-content: center;
-
-            font-size: 25px;
-            font-weight: bold;
-
-            margin-bottom: 35px;
-
-            box-shadow: 5px 5px 0 rgba(245, 239, 227, 0.15);
-        }
-
-        .brand-small {
-            color: #c5ddc9;
-            font-size: 12px;
-            letter-spacing: 1px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .brand {
-            font-size: 25px;
-            font-weight: 700;
-            line-height: 1.05;
-        }
-
-        .sidebar-bottom {
-            margin-top: auto;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-            padding-top: 22px;
-        }
-
-        .status {
-            display: flex;
             align-items: center;
-            gap: 9px;
-
-            font-size: 14px;
-            font-weight: bold;
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        .status-dot {
-            width: 9px;
-            height: 9px;
-
-            background: #a9c9ad;
-            border-radius: 50%;
-
-            box-shadow: 0 0 10px rgba(169, 201, 173, 0.6);
-        }
-
-        .sidebar-text {
-            color: #b9c8bd;
-            font-size: 13px;
-            line-height: 1.5;
-            margin-top: 8px;
-        }
-
-
-        /* =========================
-           CHAT AREA
-        ========================= */
-
-        .chat-area {
-            flex: 1;
-
+        /* Main chatbot */
+        .chat-container {
+            width: 90%;
+            max-width: 700px;
+            height: 80vh;
+            min-height: 500px;
+            background: #fffdf8;
+            border-radius: 24px;
             display: flex;
             flex-direction: column;
-
-            min-width: 0;
-            min-height: 100vh;
-
-            background: var(--beige);
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(71, 91, 65, 0.15);
+            border: 1px solid #dfe6d8;
         }
 
-
-        /* =========================
-           TOP BAR
-        ========================= */
-
-        .topbar {
-            height: 75px;
-
-            padding: 0 6%;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            border-bottom: 1px solid var(--border);
+        /* Header */
+        .header {
+            background: #dce8d4;
+            color: #33432f;
+            padding: 22px 25px;
+            text-align: center;
+            border-bottom: 1px solid #cddbc5;
         }
 
-        .session {
-            font-size: 12px;
-            color: var(--green);
-
-            letter-spacing: 1px;
-            font-weight: bold;
+        .header h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
         }
 
-        .ready {
-            border: 1px solid var(--border);
-
-            padding: 8px 14px;
-            border-radius: 20px;
-
-            display: flex;
-            align-items: center;
-            gap: 8px;
-
-            color: var(--muted);
-            font-size: 13px;
+        .header p {
+            margin: 7px 0 0;
+            font-size: 14px;
+            color: #66745f;
         }
 
-
-        /* =========================
-           MESSAGE AREA
-        ========================= */
-
+        /* Chat area */
         .messages {
             flex: 1;
-
+            padding: 28px;
             overflow-y: auto;
-
-            padding: 50px 8%;
-
-            scroll-behavior: smooth;
+            background: #fffdf8;
         }
 
-
-        /* =========================
-           WELCOME
-        ========================= */
-
-        .welcome {
-            max-width: 750px;
-            margin: 0 auto 35px;
-        }
-
-        .welcome-label {
-            color: var(--green);
-
-            font-family: monospace;
-            font-size: 14px;
-
+        /* Message bubbles */
+        .message {
             margin-bottom: 16px;
-        }
-
-        .welcome h1 {
-            color: var(--green-dark);
-
-            font-size: clamp(32px, 4vw, 52px);
-
-            line-height: 1.05;
-
-            margin: 0 0 18px;
-
-            letter-spacing: -2px;
-        }
-
-        .welcome p {
-            color: var(--muted);
-
-            font-size: 16px;
-
-            line-height: 1.6;
-
-            margin: 0;
-        }
-
-
-        /* =========================
-           SUGGESTION BUTTONS
-        ========================= */
-
-        .suggestions {
-            max-width: 750px;
-
-            margin: 0 auto;
-
-            display: grid;
-
-            grid-template-columns: repeat(2, 1fr);
-
-            gap: 12px;
-        }
-
-        .suggestion {
-            background: rgba(255, 255, 255, 0.35);
-
-            border: 1px solid var(--border);
-
-            border-radius: 15px;
-
-            padding: 18px;
-
-            color: var(--text);
-
-            text-align: left;
-
-            cursor: pointer;
-
-            transition: all 0.2s ease;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            min-height: 70px;
-        }
-
-        .suggestion:hover {
-            border-color: var(--green);
-
-            background: var(--green-light);
-
-            transform: translateY(-2px);
-        }
-
-        .suggestion-left {
-            display: flex;
-
-            align-items: center;
-
-            gap: 13px;
-        }
-
-        .suggestion-icon {
-            font-size: 20px;
-        }
-
-        .suggestion-title {
-            font-size: 14px;
-
-            font-weight: 600;
-        }
-
-        .suggestion-arrow {
-            color: var(--green);
-
-            font-size: 20px;
-        }
-
-
-        /* =========================
-           CHAT MESSAGES
-        ========================= */
-
-        .chat-message {
-            max-width: 750px;
-
-            margin: 0 auto 18px;
-
-            display: flex;
-        }
-
-        .chat-message.user {
-            justify-content: flex-end;
-        }
-
-        .bubble {
-            max-width: 75%;
-
-            padding: 14px 17px;
-
+            padding: 13px 17px;
             border-radius: 17px;
-
+            max-width: 78%;
             line-height: 1.5;
-
             font-size: 15px;
-
-            white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
-        .bot .bubble {
-            background: var(--sage);
-
-            border: 1px solid var(--border);
-
-            color: var(--text);
-
+        .bot {
+            background: #edf3e9;
+            color: #394635;
+            border: 1px solid #e1e9dc;
             border-bottom-left-radius: 5px;
         }
 
-        .user .bubble {
-            background: var(--green);
-
-            color: white;
-
+        .user {
+            background: #b9cfad;
+            color: #263322;
+            margin-left: auto;
             border-bottom-right-radius: 5px;
         }
 
-
-        /* =========================
-           TYPING INDICATOR
-        ========================= */
-
-        .typing {
+        /* Suggestions */
+        .suggestions {
             display: flex;
-
-            gap: 5px;
-
-            align-items: center;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin: 4px 0 22px 0;
         }
 
-        .typing span {
-            width: 6px;
-            height: 6px;
-
-            background: var(--muted);
-
-            border-radius: 50%;
-
-            animation: bounce 1.2s infinite;
+        .suggestion-btn {
+            background: #f4ead8;
+            color: #56604c;
+            border: 1px solid #e4d7c1;
+            padding: 9px 14px;
+            border-radius: 18px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .typing span:nth-child(2) {
-            animation-delay: 0.15s;
+        .suggestion-btn:hover {
+            background: #e8dfcd;
+            border-color: #cfc2aa;
+            transform: translateY(-1px);
         }
 
-        .typing span:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-
-        @keyframes bounce {
-
-            0%,
-            60%,
-            100% {
-                transform: translateY(0);
-            }
-
-            30% {
-                transform: translateY(-5px);
-            }
-        }
-
-
-        /* =========================
-           INPUT AREA
-        ========================= */
-
-        .input-section {
-            padding: 15px 8% 28px;
-        }
-
-        .input-wrapper {
-            max-width: 750px;
-
-            margin: auto;
-
-            position: relative;
-        }
-
+        /* Input area */
         .input-area {
-            width: 100%;
-
-            min-height: 64px;
-
-            border: 1px solid rgba(52, 72, 61, 0.25);
-
-            background: var(--beige-light);
-
-            border-radius: 34px;
-
             display: flex;
-
-            align-items: center;
-
-            padding: 8px 10px 8px 22px;
-
-            transition: border 0.2s;
-        }
-
-        .input-area:focus-within {
-            border-color: var(--green);
+            padding: 16px 18px;
+            border-top: 1px solid #e3e5dc;
+            background: #f8f5ec;
+            gap: 10px;
         }
 
         input {
             flex: 1;
-
-            border: none;
-
-            outline: none;
-
-            background: transparent;
-
-            color: var(--text);
-
+            padding: 13px 16px;
+            border: 1px solid #d4ddcf;
+            border-radius: 14px;
             font-size: 15px;
+            font-family: inherit;
+            background: #fffdf8;
+            color: #354031;
+            outline: none;
+        }
 
-            min-width: 0;
+        input:focus {
+            border-color: #a8bd9d;
+            box-shadow: 0 0 0 3px rgba(168, 189, 157, 0.15);
         }
 
         input::placeholder {
-            color: #89968d;
+            color: #9a9f95;
         }
 
-        .send-button {
-            width: 48px;
-            height: 48px;
-
-            border-radius: 50%;
-
+        /* Send button */
+        .send-btn {
+            padding: 12px 20px;
             border: none;
-
-            background: var(--green);
-
+            border-radius: 14px;
+            background: #8da982;
             color: white;
-
-            font-size: 22px;
-
             cursor: pointer;
-
-            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s ease;
         }
 
-        .send-button:hover {
-            background: #5f7d68;
-
-            transform: scale(1.05);
+        .send-btn:hover {
+            background: #78966d;
         }
 
-        .send-button:disabled {
-            opacity: 0.5;
-
-            cursor: not-allowed;
-
-            transform: none;
+        /* Scrollbar */
+        .messages::-webkit-scrollbar {
+            width: 6px;
         }
 
-        .footer-text {
-            max-width: 750px;
-
-            margin: 10px auto 0;
-
-            text-align: center;
-
-            font-size: 11px;
-
-            color: #89968d;
+        .messages::-webkit-scrollbar-track {
+            background: transparent;
         }
 
+        .messages::-webkit-scrollbar-thumb {
+            background: #d0d9ca;
+            border-radius: 10px;
+        }
 
-        /* =========================
-           MOBILE
-        ========================= */
-
-        @media (max-width: 700px) {
-
-            .sidebar {
-                display: none;
+        /* Mobile */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
             }
 
-            .topbar {
-                padding: 0 20px;
+            .chat-container {
+                width: 100%;
+                height: 90vh;
+                border-radius: 18px;
             }
 
             .messages {
-                padding: 35px 20px;
+                padding: 20px;
             }
 
-            .welcome h1 {
-                font-size: 34px;
-            }
-
-            .suggestions {
-                grid-template-columns: 1fr;
-            }
-
-            .input-section {
-                padding: 12px 15px 20px;
-            }
-
-            .bubble {
+            .message {
                 max-width: 88%;
             }
-        }
 
+            .suggestion-btn {
+                font-size: 12px;
+                padding: 8px 11px;
+            }
+
+            .header h1 {
+                font-size: 23px;
+            }
+        }
     </style>
 </head>
 
-
 <body>
 
-<div class="app">
+<div class="chat-container">
 
+    <!-- Header -->
+    <div class="header">
+        <h1>📚 BooksTaken</h1>
+        <p>Your reading journey, one conversation at a time.</p>
+    </div>
 
-    <!-- =========================
-         SIDEBAR
-    ========================== -->
+    <!-- Messages -->
+    <div class="messages" id="messages">
 
-    <aside class="sidebar">
-
-        <div class="logo">
-            B
+        <div class="message bot">
+            Hi! I'm the BooksTaken assistant. How can I help you? 😊
         </div>
 
-        <div class="brand-small">
-            BOOKSTAKEN
+        <!-- Suggestion buttons -->
+        <div class="suggestions">
+            <button class="suggestion-btn" onclick="useSuggestion('What books do you recommend?')">
+                📖 Book recommendations
+            </button>
+
+            <button class="suggestion-btn" onclick="useSuggestion('Tell me about BooksTaken')">
+                🌿 About BooksTaken
+            </button>
+
+            <button class="suggestion-btn" onclick="useSuggestion('How can I find a book?')">
+                🔎 Find a book
+            </button>
+
+            <button class="suggestion-btn" onclick="useSuggestion('What can you help me with?')">
+                💬 What can you help with?
+            </button>
         </div>
 
-        <div class="brand">
-            BooksTaken<br>
-            Assistant
-        </div>
-
-
-        <div class="sidebar-bottom">
-
-            <div class="status">
-
-                <span class="status-dot"></span>
-
-                Here for parents
-
-            </div>
-
-
-            <div class="sidebar-text">
-
-                Helpful answers about your
-                child's reading journey.
-
-            </div>
-
-        </div>
-
-    </aside>
-
-
-
-    <!-- =========================
-         CHAT AREA
-    ========================== -->
-
-    <main class="chat-area">
-
-
-        <!-- TOP BAR -->
-
-        <header class="topbar">
-
-            <div class="session">
-                NEW SESSION
-            </div>
-
-
-            <div class="ready">
-
-                <span class="status-dot"></span>
-
-                Ready
-
-            </div>
-
-        </header>
-
-
-
-        <!-- =========================
-             MESSAGES
-        ========================== -->
-
-        <div class="messages" id="messages">
-
-
-            <!-- WELCOME SCREEN -->
-
-            <div id="welcomeSection">
-
-
-                <div class="welcome">
-
-                    <div class="welcome-label">
-                        Welcome to BooksTaken support.
-                    </div>
-
-
-                    <h1>
-                        How can we help with your child's reading journey?
-                    </h1>
-
-
-                    <p>
-                        Ask us anything about BooksTaken,
-                        our mentors, reading sessions,
-                        pricing, or getting started.
-                    </p>
-
-                </div>
-
-
-
-                <!-- =========================
-                     QUICK QUESTIONS
-                ========================== -->
-
-                <div class="suggestions">
-
-
-                    <button
-                        class="suggestion"
-                        onclick="askQuestion('How much does BooksTaken cost?')"
-                    >
-
-                        <div class="suggestion-left">
-
-                            <span class="suggestion-icon">
-                                💰
-                            </span>
-
-                            <span class="suggestion-title">
-                                How much does it cost?
-                            </span>
-
-                        </div>
-
-
-                        <span class="suggestion-arrow">
-                            →
-                        </span>
-
-                    </button>
-
-
-
-                    <button
-                        class="suggestion"
-                        onclick="askQuestion('How are the mentors selected?')"
-                    >
-
-                        <div class="suggestion-left">
-
-                            <span class="suggestion-icon">
-                                👩‍🏫
-                            </span>
-
-                            <span class="suggestion-title">
-                                How are mentors selected?
-                            </span>
-
-                        </div>
-
-
-                        <span class="suggestion-arrow">
-                            →
-                        </span>
-
-                    </button>
-
-
-
-                    <button
-                        class="suggestion"
-                        onclick="askQuestion('What if my child does not like reading?')"
-                    >
-
-                        <div class="suggestion-left">
-
-                            <span class="suggestion-icon">
-                                📚
-                            </span>
-
-                            <span class="suggestion-title">
-                                What if my child doesn't like reading?
-                            </span>
-
-                        </div>
-
-
-                        <span class="suggestion-arrow">
-                            →
-                        </span>
-
-                    </button>
-
-
-
-                    <button
-                        class="suggestion"
-                        onclick="askQuestion('Can I book a free trial?')"
-                    >
-
-                        <div class="suggestion-left">
-
-                            <span class="suggestion-icon">
-                                🎁
-                            </span>
-
-                            <span class="suggestion-title">
-                                Can I book a free trial?
-                            </span>
-
-                        </div>
-
-
-                        <span class="suggestion-arrow">
-                            →
-                        </span>
-
-                    </button>
-
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =========================
-             INPUT
-        ========================== -->
-
-        <div class="input-section">
-
-
-            <div class="input-wrapper">
-
-
-                <div class="input-area">
-
-
-                    <input
-                        type="text"
-                        id="messageInput"
-                        placeholder="Ask a question about BooksTaken..."
-                        autocomplete="off"
-                    >
-
-
-                    <button
-                        class="send-button"
-                        id="sendButton"
-                        onclick="sendMessage()"
-                    >
-                        →
-                    </button>
-
-
-                </div>
-
-
-                <div class="footer-text">
-
-                    For account-specific help,
-                    contact the BooksTaken team directly.
-
-                </div>
-
-
-            </div>
-
-        </div>
-
-
-    </main>
+    </div>
+
+    <!-- Input -->
+    <div class="input-area">
+        <input
+            type="text"
+            id="messageInput"
+            placeholder="Ask something..."
+            onkeydown="handleKeyPress(event)"
+        >
+
+        <button class="send-btn" onclick="sendMessage()">
+            Send
+        </button>
+    </div>
 
 </div>
 
 
-
 <script>
 
+    /* Suggestion button */
+    function useSuggestion(text) {
+        const input = document.getElementById("messageInput");
 
-    /* =========================
-       GET ELEMENTS
-    ========================== */
-
-    const input =
-        document.getElementById("messageInput");
-
-    const messages =
-        document.getElementById("messages");
-
-    const sendButton =
-        document.getElementById("sendButton");
-
-    const welcomeSection =
-        document.getElementById("welcomeSection");
-
-
-
-    /* =========================
-       ENTER KEY
-    ========================== */
-
-    input.addEventListener(
-        "keydown",
-        function(event) {
-
-            if (event.key === "Enter") {
-
-                event.preventDefault();
-
-                sendMessage();
-
-            }
-
-        }
-    );
-
-
-
-    /* =========================
-       QUICK QUESTION
-    ========================== */
-
-    function askQuestion(question) {
-
-        input.value = question;
-
+        input.value = text;
         sendMessage();
-
     }
 
 
-
-    /* =========================
-       ADD MESSAGE
-    ========================== */
-
-    function addMessage(text, type) {
-
-        const wrapper =
-            document.createElement("div");
-
-        wrapper.className =
-            `chat-message ${type}`;
-
-
-        const bubble =
-            document.createElement("div");
-
-        bubble.className =
-            "bubble";
-
-
-        /*
-         * textContent is used instead of
-         * innerHTML for user/AI messages.
-         */
-
-        bubble.textContent = text;
-
-
-        wrapper.appendChild(bubble);
-
-        messages.appendChild(wrapper);
-
-
-        messages.scrollTop =
-            messages.scrollHeight;
-
-    }
-
-
-
-    /* =========================
-       TYPING INDICATOR
-    ========================== */
-
-    function showTyping() {
-
-        const wrapper =
-            document.createElement("div");
-
-        wrapper.className =
-            "chat-message bot";
-
-        wrapper.id =
-            "typingMessage";
-
-
-        wrapper.innerHTML = `
-
-            <div class="bubble typing">
-
-                <span></span>
-                <span></span>
-                <span></span>
-
-            </div>
-
-        `;
-
-
-        messages.appendChild(wrapper);
-
-        messages.scrollTop =
-            messages.scrollHeight;
-
-    }
-
-
-
-    /* =========================
-       REMOVE TYPING
-    ========================== */
-
-    function removeTyping() {
-
-        const typing =
-            document.getElementById(
-                "typingMessage"
-            );
-
-
-        if (typing) {
-
-            typing.remove();
-
+    /* Enter key */
+    function handleKeyPress(event) {
+        if (event.key === "Enter") {
+            sendMessage();
         }
-
     }
 
 
-
-    /* =========================
-       SEND MESSAGE
-    ========================== */
-
+    /* Send message */
     async function sendMessage() {
 
-        const message =
-            input.value.trim();
+        const input = document.getElementById("messageInput");
+        const messages = document.getElementById("messages");
 
+        const message = input.value.trim();
 
-        if (
-            !message ||
-            sendButton.disabled
-        ) {
-
+        if (!message) {
             return;
-
         }
 
-
-        /*
-         * Remove the welcome screen
-         * once conversation begins.
-         */
-
-        if (welcomeSection) {
-
-            welcomeSection.remove();
-
-        }
-
-
-        /* Show user message */
-
-        addMessage(
-            message,
-            "user"
-        );
-
-
-        /* Clear input */
+        /* Add user message */
+        messages.innerHTML += `
+            <div class="message user">
+                ${message}
+            </div>
+        `;
 
         input.value = "";
 
-
-        /* Disable send */
-
-        sendButton.disabled = true;
-
-
-        /* Show typing */
-
-        showTyping();
-
-
+        /* Scroll down */
+        messages.scrollTop = messages.scrollHeight;
 
         try {
 
-
-            /*
-             * YOUR EXISTING BACKEND
-             *
-             * Nothing needs to change here.
-             */
-
-            const response =
-                await fetch(
-                    "/chat",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body: JSON.stringify({
-                            message: message
-                        })
-                    }
-                );
-
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Server error"
-                );
-
-            }
-
-
-
-            const data =
-                await response.json();
-
-
-            /* Remove typing */
-
-            removeTyping();
-
-
-            /* Show bot answer */
-
-            addMessage(
-                data.answer ||
-                "Sorry, I couldn't find an answer.",
-                "bot"
+            const response = await fetch(
+                "/chat",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        message: message
+                    })
+                }
             );
 
+            const data = await response.json();
+
+            /* Add bot response */
+            messages.innerHTML += `
+                <div class="message bot">
+                    ${data.answer}
+                </div>
+            `;
 
         } catch (error) {
 
-
-            removeTyping();
-
-
-            addMessage(
-                "Sorry, something went wrong. Please try again.",
-                "bot"
-            );
-
+            messages.innerHTML += `
+                <div class="message bot">
+                    Sorry, something went wrong. Please try again.
+                </div>
+            `;
 
             console.error(error);
-
         }
 
-
-
-        /* Enable send */
-
-        sendButton.disabled = false;
-
-
-        input.focus();
-
+        /* Scroll to latest message */
+        messages.scrollTop = messages.scrollHeight;
     }
 
 </script>
